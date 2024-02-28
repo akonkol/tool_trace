@@ -71,3 +71,5 @@ python3 tool_trace.py convert  images/src/micro-cutters.jpg --no-dugout
 9) Offset the tool contour by 1.5mm
 10) Extrude dugout and tool contour into bin
 11) 3D Print
+
+![extrude-tool-from-gridfinity-base](https://github.com/akonkol/tool_trace/blob/main/images/docs/fusion-process.gif?raw=true)
