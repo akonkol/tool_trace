@@ -13,7 +13,7 @@ I use a phone stand and a light panel
 The distance between the camera and tool may very from person to person. To adjust for this 
 variance there is a simple calibration process.
 
-1) Take a picture of a 10mm x 10mm square with an Iphone (3024, 4032 pixels)
+1) Take a picture of a 10mm x 10mm square
 2) Run the calibrate command and follow the prompts
 3) As long as you never change the following you should never have to calibrate again:
   - distance between tool and camera 
@@ -56,3 +56,17 @@ Writing SVG to: images/svg/micro-cutters.svg
 ```
 python3 tool_trace.py convert  images/src/micro-cutters.jpg --no-dugout
 ```
+
+
+## Example workflow
+1) Take picture of tool in phone stand
+2) Share photo to host computer via AirDrop
+3) Run `./grab_last_image_upload.sh` to retrieve the last image downloaded
+4) Give the tool a name
+5) Convert to svg
+6) Create new Fusion 360 Design
+7) Generate a gridfinity bin using [this](https://apps.autodesk.com/FUSION/en/Detail/Index?id=7197558650811789&appLang=en&os=Mac) generator
+8) Import svg onto the face of the bin
+9) Offset the tool contour by 1.5mm
+10) Extrude dugout and tool contour into bin
+11) 3D Print
