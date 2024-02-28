@@ -1,4 +1,5 @@
 # tool_trace
+![alt text](https://github.com/akonkol/tool_trace/blob/main/photo-to-svg.gif?raw=true)
 
 Take pictures of your tools and create an outline in svg.
 
@@ -12,7 +13,7 @@ I use a phone stand and a light panel
 The distance between the camera and tool may very from person to person. To adjust for this 
 variance there is a simple calibration process.
 
-1) Take a picture of a 10mm x 10mm square
+1) Take a picture of a 10mm x 10mm square with an Iphone (3024, 4032 pixels)
 2) Run the calibrate command and follow the prompts
 3) As long as you never change the following you should never have to calibrate again:
   - distance between tool and camera 
