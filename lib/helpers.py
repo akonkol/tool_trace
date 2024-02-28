@@ -209,11 +209,11 @@ def generate_svg(tool_contour, scale_factor, no_dugout):
         dugout,
         tool_svg,
     ]
+    log.info("Generated dugout")
 
   plate = svg.SVG(
     width= width_gunits * GRIDFINITY_DIMENSION *  PX_TO_FUSION_MM + 10,
     height= height_gunits * GRIDFINITY_DIMENSION *  PX_TO_FUSION_MM + 10,
     elements=elements
   )
-  log.info("Generated dugout")
   return plate

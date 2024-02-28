@@ -1,5 +1,5 @@
 # tool_trace
-![alt text](https://github.com/akonkol/tool_trace/blob/main/images/photo-to-svg.gif?raw=true)
+![photo-to-svg](https://github.com/akonkol/tool_trace/blob/main/images/docs/photo-to-svg.gif?raw=true)
 
 Take pictures of your tools and create an outline in svg.
 
@@ -51,6 +51,8 @@ Writing SVG to: images/svg/micro-cutters.svg
 ```
 
 ## I don't any of the extra generated stuff (dugouts) 
+
+![photo-to-svg-no-dugout](https://github.com/akonkol/tool_trace/blob/main/images/docs/micro-cutters-no-dugout.jpg?raw=true)
 ```
 python3 tool_trace.py convert  images/src/micro-cutters.jpg --no-dugout
 ```
