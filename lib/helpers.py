@@ -148,6 +148,7 @@ def generate_svg(tool_contour, scale_factor, no_dugout):
 
   perimeter_width = width_gunits * GRIDFINITY_DIMENSION
   perimeter_height = height_gunits * GRIDFINITY_DIMENSION
+  log.info("Tool is {} x {} Gridfinity Units".format(width_gunits, height_gunits))
   log.debug("Perimeter {} x {}".format(perimeter_width, perimeter_height))
   log.debug("Tool {} x {}".format(tool_width, tool_height))
 
