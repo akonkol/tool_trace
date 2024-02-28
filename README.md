@@ -1,5 +1,5 @@
 # tool_trace
-![alt text](https://github.com/akonkol/tool_trace/blob/main/photo-to-svg.gif?raw=true)
+![alt text](https://github.com/akonkol/tool_trace/blob/main/images/photo-to-svg.gif?raw=true)
 
 Take pictures of your tools and create an outline in svg.
 
