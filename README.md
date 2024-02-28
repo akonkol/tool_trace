@@ -6,8 +6,9 @@ Take pictures of your tools and create an outline in svg.
 For this to work, you will need to make sure that you take quality pictures with adequate lighting
 from a consistent distance.
 
-I use a phone stand and a light panel
+I use this [phone stand and a light panel](https://www.printables.com/model/785851-phone-camerascanner-stand)
 
+![Phone Stand](https://github.com/akonkol/tool_trace/blob/main/images/docs/phone-stand.jpg?raw=true)
 
 ## Calibration
 The distance between the camera and tool may very from person to person. To adjust for this 
