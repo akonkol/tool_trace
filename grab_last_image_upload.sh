@@ -9,5 +9,5 @@ filename="${tool_name}.jpg"
 src_filepath="images/src/${filename}"
 cp ${last_image_file} ${src_filepath}
 
-/usr/local/bin/python3 tool_trace convert ${src_filepath}
+/usr/local/bin/python3 tool_trace.py convert ${src_filepath}
 kill $(pgrep -nx  Preview)
