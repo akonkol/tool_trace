@@ -1,0 +1,4 @@
+*.pyc
+images/src/*.jpg
+images/svg/*.svg
+config.yaml
