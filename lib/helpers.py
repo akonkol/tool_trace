@@ -123,8 +123,13 @@ def find_center_coords(contour):
   return cX, cY
 
 def get_scaling_factor_from_config_file(filepath):
-  with open(filepath, 'r') as stream:
-          data_loaded = yaml.safe_load(stream)
+  try:
+    with open(filepath, 'r') as stream:
+      data_loaded = yaml.safe_load(stream)
+  except IOError as i:
+    raise Exception("""Cannot load calibration info from {}, have you run
+    tooltrace.py calibrate?""".format(
+        filepath))
   return data_loaded['scaling_factor']
 
 def scale_contour(contour, scale):
