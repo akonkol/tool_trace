@@ -29,7 +29,7 @@ def convert(image_filepath, config_filepath, scaling_factor, no_dugout):
   contours = sorted(contours, key=cv2.contourArea, reverse=True)
   log.info("Extracted contours from image")
 
-  tool_contour = helpers.force_perpendicular(helpers.smooth_contour(contours[1]))
+  tool_contour = helpers.force_perpendicular(bw_image, helpers.smooth_contour(contours[1]))
 
   PX_TO_FUSION_MM = 3.8 #draw something as pixel, then scale by this
   CAM_PX_TO_FUSION_MM = scale_factor

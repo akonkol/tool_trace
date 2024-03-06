@@ -32,21 +32,23 @@ def write_svg_to_file(filepath, svg):
     log.info("Writing SVG to: {}".format(filepath))
     f.write(str(svg))
 
-def force_perpendicular(contour):
-  REF_ANGLE = 90
+def force_perpendicular(img, contour):
+  TARGET_ANGLE = 90
+
+  # MinAreaRect can return 0, 90, 180, 270 in a clockwise fashion
   rect = cv2.minAreaRect(contour)
   center, size, angle = rect
   box = cv2.boxPoints(rect)
   box = numpy.int0(box)
 
-  log.debug("Original angle found: {}".format(angle))
-  if size[0] < size[1]:
-      adjustment_angle = 0 - angle
-  else:
-      adjustment_angle = REF_ANGLE - angle
+  log.info("Original angle found: {}".format(angle))
+  # we want to always get to 90 degrees?
+  adjustment_angle = TARGET_ANGLE - angle
+  log.info("Adjustment angle: {}".format(adjustment_angle))
+  return(rotate_contour(contour, adjustment_angle))
 
-  log.info("Rotating contour by: {}".format(adjustment_angle))
-  return rotate_contour(contour, adjustment_angle)
+  # We pretty much always want the long side of ther rectangle to be perpendicular to the ground
+  #
 
 def cart2pol(x, y):
   theta = numpy.arctan2(y, x)
@@ -147,6 +149,10 @@ def scale_contour(contour, scale):
 def generate_svg(tool_contour, scale_factor, no_dugout):
   DUGOUT_MARGIN = 5
   tool_x,tool_y,tool_width, tool_height = cv2.boundingRect(tool_contour)
+
+  if tool_width >  GRIDFINITY_DIMENSION - (2 * DUGOUT_MARGIN):
+    log.debug("tool is less than gu")
+    tool_width += 10
 
   width_gunits = math.ceil(tool_width * scale_factor / GRIDFINITY_DIMENSION)
   height_gunits = math.ceil(tool_height * scale_factor / GRIDFINITY_DIMENSION)
