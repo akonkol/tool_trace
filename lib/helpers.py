@@ -33,7 +33,8 @@ def write_svg_to_file(filepath, svg):
     f.write(str(svg))
 
 def force_perpendicular(img, contour):
-  TARGET_ANGLE = 90
+  NINETY_DEGREES = 90
+  ZERO_DEGREES = 0
 
   # MinAreaRect can return 0, 90, 180, 270 in a clockwise fashion
   rect = cv2.minAreaRect(contour)
@@ -42,13 +43,11 @@ def force_perpendicular(img, contour):
   box = numpy.int0(box)
 
   log.info("Original angle found: {}".format(angle))
-  # we want to always get to 90 degrees?
-  adjustment_angle = TARGET_ANGLE - angle
+  # we want to always get to 90  or 0 degrees?
+  m = min(abs(NINETY_DEGREES - angle), abs(ZERO_DEGREES - angle))
+  adjustment_angle = m
   log.info("Adjustment angle: {}".format(adjustment_angle))
   return(rotate_contour(contour, adjustment_angle))
-
-  # We pretty much always want the long side of ther rectangle to be perpendicular to the ground
-  #
 
 def cart2pol(x, y):
   theta = numpy.arctan2(y, x)
