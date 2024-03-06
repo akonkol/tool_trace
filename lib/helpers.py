@@ -44,7 +44,7 @@ def force_perpendicular(img, contour):
 
   log.info("Original angle found: {}".format(angle))
   # we want to always get to 90  or 0 degrees?
-  m = min(abs(NINETY_DEGREES - angle), abs(ZERO_DEGREES - angle))
+  m = min(abs(NINETY_DEGREES - angle), ZERO_DEGREES - angle)
   adjustment_angle = m
   log.info("Adjustment angle: {}".format(adjustment_angle))
   return(rotate_contour(contour, adjustment_angle))
