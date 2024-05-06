@@ -11,8 +11,8 @@ I use this [phone stand and a light panel](https://www.printables.com/model/7858
 ![Phone Stand](https://github.com/akonkol/tool_trace/blob/main/images/docs/phone-stand.jpg?raw=true)
 
 ## Calibration
-The distance between the camera and tool may very from person to person. To adjust for this 
-variance there is a simple calibration process.
+The distance between the camera and tool may vary from person to person. To adjust for this 
+variance there is a simple calibration process:
 
 1) Take a picture of a 10mm x 10mm square
 2) Run the calibrate command and follow the prompts
