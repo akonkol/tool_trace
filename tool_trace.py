@@ -1,9 +1,9 @@
 import click
-from commands import calibrate, convert 
+from commands import calibrate, convert
 import logging
 
 logging.basicConfig(
-   level=logging.INFO,
+   level=logging.DEBUG,
    format='%(message)s',
 )
 log = logging.getLogger(__name__)

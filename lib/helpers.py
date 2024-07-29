@@ -11,6 +11,7 @@ log = logging.getLogger(__name__)
 PX_TO_FUSION_MM = 3.8 #draw something as pixel, then scale by this
 GRIDFINITY_DIMENSION = 42
 STROKE_WIDTH=1
+ARUCO_ID=7
 
 def convert_image_to_high_contrast(filename):
   image = cv2.imread(str(filename), cv2.IMREAD_GRAYSCALE)
@@ -87,24 +88,27 @@ def rotate_contour(contour, angle):
 
   return contour_rotated
 
-def create_svg_from_contour(contour) -> svg.SVG:
-  log.debug("Creating Path for contour")
-  contour_points=[]
-  for i in range(len(contour)):
-      x, y = contour[i][0]
-      if i == 0:
-        contour_points.append(svg.M(x,y))
-      else:
-        contour_points.append(svg.L(x,y))
-      if i == len(contour)-1:
-        contour_points.append(svg.Z())
-  cx, cy = find_center_coords(contour)
-  return svg.Path(
-      d= contour_points,
-      fill="none",
-      stroke="blue",
-      stroke_width=STROKE_WIDTH,
-  )
+def create_svgs_from_contours(contours) -> svg.SVG:
+  svg_contours = []
+  for contour in contours:
+    log.debug("Creating Path for contour")
+    contour_points=[]
+    for i in range(len(contour)):
+        x, y = contour[i][0]
+        if i == 0:
+          contour_points.append(svg.M(x,y))
+        else:
+          contour_points.append(svg.L(x,y))
+        if i == len(contour)-1:
+          contour_points.append(svg.Z())
+    cx, cy = find_center_coords(contour)
+    svg_contours.append( svg.Path(
+        d= contour_points,
+        fill="none",
+        stroke="blue",
+        stroke_width=STROKE_WIDTH,
+    ))
+  return svg_contours
 
 def create_svg_from_elements(elements, width, height):
   return svg.SVG(
@@ -170,7 +174,7 @@ def generate_svg(tool_contour, scale_factor, no_dugout):
   log.debug("Centered {}, {}".format(centered_tool_x_position, centered_tool_y_position))
 
   centered_tool_contour = shift_origin(tool_contour, centered_tool_x_position , centered_tool_y_position)
-  tool_svg = create_svg_from_contour(centered_tool_contour)
+  tool_svg = create_svgs_from_contours(centered_tool_contour)
 
   perimeter = svg.Rect(
           x=0,
@@ -231,3 +235,72 @@ def generate_svg(tool_contour, scale_factor, no_dugout):
     elements=elements
   )
   return plate
+
+def get_aruco_perimeter(image):
+  aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_100)
+  corners, ids, rej = cv2.aruco.detectMarkers(image, aruco_dict)
+  number_of_arucos = len(corners)
+
+  if number_of_arucos != 1:
+    sys.exit(1)
+
+  int_corners = numpy.intp(corners)
+  cv2.polylines(image, int_corners, True, (255, 0, 0), 5)
+  log.debug("Aruco corners: {}".format(int_corners))
+  aruco_perimeter = cv2.arcLength(corners[0], True)
+  return aruco_perimeter
+
+def get_aruco_contour_index(contours, aruco_dimension_mm, pixel_mm_ratio):
+  for index, contour in enumerate(contours):
+    rect = cv2.minAreaRect(contour)
+    (x, y), (w, h), angle = rect
+    object_width = w / pixel_mm_ratio
+    object_height = h / pixel_mm_ratio
+    if ( math.isclose((aruco_dimension_mm  / object_width), 1, abs_tol=0.05) and
+      math.isclose((aruco_dimension_mm  / object_height), 1.0, abs_tol=0.05)):
+      log.info("Aruco detected, index: {}".format(index))
+      return index
+
+def filter_contours(contours, aruco_contour_index, pixel_mm_ratio):
+  filtered_contours = []
+  min_perimeter_size_mm = 10
+
+  for index, contour in enumerate(contours):
+    log.debug("Index is: {}".format(index))
+    if index == 0 or index ==  aruco_contour_index:
+      # Since we have sorted by Area, the first contour will be the background contour
+      log.debug("skipped aruco contour index {}".format(index))
+      continue
+
+    rect = cv2.minAreaRect(contour)
+    (x, y), (w, h), angle = rect
+
+    # Get Width and Height of the Objects by applying the Ratio pixel to cm
+    object_width = w / pixel_mm_ratio
+    object_height = h / pixel_mm_ratio
+    object_perimeter = cv2.arcLength(contour, True) / pixel_mm_ratio
+
+    if object_perimeter <= min_perimeter_size_mm:
+      log.debug("skipped contour due to it being too small, perimeter: {}".format(object_perimeter))
+      continue
+
+    if object_width == 0 or object_height == 0:
+      log.debug("Skipped because the image has zeros")
+      continue
+
+    internal_aruco_contour_index=None
+    for coordinates in contour:
+      # Determine if the current contour exists inside the aruco contour and reject if it is
+      x, y = coordinates[0]
+      assessment = cv2.pointPolygonTest(contours[aruco_contour_index], (x.item(), y.item()), False)
+      if assessment > 0:
+        log.debug("Point {}, {} in Contour index {} is inside the aruco".format(x.item(), y.item(), index))
+        internal_aruco_contour_index = index
+        break
+    if internal_aruco_contour_index:
+      continue
+    else:
+      log.info("Added contour id: {}".format(index))
+      filtered_contours.append(contour)
+  log.debug("Filtered Contour List length: {}".format((len(filtered_contours))))
+  return filtered_contours
