@@ -28,8 +28,10 @@ def smooth_contour(contour):
   return cv2.approxPolyDP(contour, 0.00039999999999 * peri, True)
 
 def write_svg_to_file(filepath, svg):
-  with open(str(filepath), "w+") as f:
-    log.info("Writing SVG to: {}".format(filepath))
+  mod_path = Path(__file__).parent.parent
+  destination_path = (mod_path / filepath).resolve()
+  with open(destination_path, "w+") as f:
+    log.info("Writing SVG to: {}".format(destination_path))
     f.write(str(svg))
 
 def force_perpendicular(img, contour):
